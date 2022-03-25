@@ -32,5 +32,13 @@ namespace PersonenOrtService.Controllers
         {
             return PersonHelper.GetMeanAge(PersonHelper.Persons);
         }
+
+
+        [HttpGet]
+        [Route("PersonNameLetterCount")]
+        public double PersonNameLetterCount()
+        {
+            return PersonHelper.GetMeanAge(PersonHelper.Persons);
+        }
     }
 }
