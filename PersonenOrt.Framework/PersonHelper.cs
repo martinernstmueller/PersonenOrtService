@@ -39,5 +39,34 @@ namespace PersonenOrt.Framework
             double mean = summeAlter / persons.Count;
             return mean;
         }
+
+        public static List<Person> GetPersonsContainingStringInName(string searchString, List<Person> persons)
+        {
+            var retval = new List<Person>();
+            foreach (var person in persons)
+            {
+                if (person.Name.Contains(searchString))
+                    retval.Add(person); ;
+
+            }
+            return retval;
+        }
+
+        public static Dictionary<char, int> CountLettersOfName(List<Person> Persons)
+        {
+            var retval = new Dictionary<char, int>();
+
+            foreach (var p in Persons)
+            {
+                foreach (char c in p.Name)
+                {
+                    if (!retval.ContainsKey(c))
+                        retval.Add(c, 1);
+                    else
+                        retval[c]++;
+                }
+            }
+            return retval;
+        }
     }
 }

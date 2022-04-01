@@ -1,4 +1,4 @@
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using PersonenOrt.Framework;
 using System;
 using System.Collections.Generic;
@@ -22,8 +22,22 @@ namespace PersonOrt.Test
             };
             var meanAge = PersonHelper.GetMeanAge(Persons);
             Assert.IsTrue(meanAge == 21);
+
         }
 
-    
+        [Test]
+        public void CountLettersImplementaions()
+        {
+            List<Person> Persons = new List<Person>()
+            {
+                new Person() { Name = "aaa", Vorname = "aaa" },
+                new Person() { Name = "bb", Vorname = "bb"}
+            };
+
+            var letters = PersonHelper.CountLettersOfName(Persons);
+            Assert.IsTrue(letters['a'] == 3);
+            Assert.IsTrue(letters['b'] == 2);
+        }
     }
+
 }
