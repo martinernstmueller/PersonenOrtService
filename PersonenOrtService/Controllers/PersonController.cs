@@ -47,5 +47,12 @@ namespace PersonenOrtService.Controllers
         {
             return PersonHelper.GetMeanAge(PersonHelper.Persons);
         }
+
+        [HttpGet]
+        [Route("PersonsContainsString")]
+        public List<Person> PersonsContainsString(string searchTerm)
+        {
+            return PersonHelper.GetPersonsContainingStringInName(searchTerm, PersonHelper.Persons);
+        }
     }
 }
