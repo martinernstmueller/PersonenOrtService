@@ -2,6 +2,7 @@
 using PersonenOrt.Framework;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace PersonOrt.Test
 {
@@ -38,6 +39,25 @@ namespace PersonOrt.Test
             Assert.IsTrue(letters['a'] == 3);
             Assert.IsTrue(letters['b'] == 2);
         }
+
+        [Test]
+        public void GetPersons_ContainingString_RetrunsPersons()
+        {
+            var person1 = new Person() { Name = "aaa", Vorname = "aaa" };
+            var person2 = new Person() { Name = "bb" };
+            List<Person> Persons = new List<Person>()
+            {
+                person1,
+                person2
+            };
+            
+            var pers = PersonHelper.GetPersonsContainingStringInName("a", Persons);
+            Assert.IsTrue(pers.Count == 1);
+            Assert.IsFalse(pers.Any(p => p.Name == "bbb"));
+            CollectionAssert.Contains(pers, person1);
+            
+        }
+
     }
 
 }
