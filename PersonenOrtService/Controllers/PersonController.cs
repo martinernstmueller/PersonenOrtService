@@ -34,7 +34,7 @@ namespace PersonenOrtService.Controllers
         }
 
         [HttpGet]
-        [Route("PersonContainingStringInName")]
+        [Route("PersonContainingStringInName/{searchString}")]
         public List<Person> PersonContainingStringInName(string searchString)
         {
             return PersonHelper.GetPersonsContainingStringInName(searchString, PersonHelper.Persons);
@@ -47,5 +47,40 @@ namespace PersonenOrtService.Controllers
         {
             return PersonHelper.GetMeanAge(PersonHelper.Persons);
         }
+<<<<<<< Updated upstream
+=======
+
+        [HttpGet]
+        [Route("PersonsContainsString/{searchTerm}")]
+        public List<Person> PersonsContainsString(string searchTerm)
+        {
+            return PersonHelper.GetPersonsContainingStringInName(searchTerm, PersonHelper.Persons);
+        }
+
+
+        [HttpGet]
+        [Route("PersonsWithPLZ/{PLZ}")]
+        public List<Person> PersonsWithPLZ(string PLZ)
+        {
+            return PersonHelper.GetPersonsWithPLZ_LINQ(PLZ, PersonHelper.Persons);
+        }
+
+        [HttpDelete]
+        [Route("DeletePerson/{personId}")]
+        public void DeletePerson(int personId)
+        {
+            var personToBeRemoved = PersonHelper.Persons.FirstOrDefault(p => p.Id == personId);
+            if (personToBeRemoved != null)
+              PersonHelper.Persons.Remove(personToBeRemoved);
+        }
+
+        [HttpPut]
+        public void PostPerson(Person person)
+        {
+            PersonHelper.Persons.Add(person); 
+        }
+
+        
+>>>>>>> Stashed changes
     }
 }

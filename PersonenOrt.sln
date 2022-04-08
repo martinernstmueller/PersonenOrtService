@@ -5,9 +5,11 @@ VisualStudioVersion = 17.1.31903.286
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PersonenOrtService", "PersonenOrtService\PersonenOrtService.csproj", "{5959A75C-2067-45D1-8B3F-349C73A0059C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PersonenOrt.Framework", "PersonenOrt.Framework\PersonenOrt.Framework.csproj", "{486CEC0E-9CEA-47E1-8EEC-E706662CE942}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PersonenOrt.Framework", "PersonenOrt.Framework\PersonenOrt.Framework.csproj", "{486CEC0E-9CEA-47E1-8EEC-E706662CE942}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PersonOrt.Test", "PersonOrt.Test\PersonOrt.Test.csproj", "{66307CFC-216C-48AD-9E78-B40353822C6E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PersonOrt.Test", "PersonOrt.Test\PersonOrt.Test.csproj", "{66307CFC-216C-48AD-9E78-B40353822C6E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PersonenOrt.Repository.Service", "PersonenOrt.Repository.Service\PersonenOrt.Repository.Service.csproj", "{9C969216-26E2-4F5F-99D2-52307B615FB4}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{66307CFC-216C-48AD-9E78-B40353822C6E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{66307CFC-216C-48AD-9E78-B40353822C6E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{66307CFC-216C-48AD-9E78-B40353822C6E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9C969216-26E2-4F5F-99D2-52307B615FB4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9C969216-26E2-4F5F-99D2-52307B615FB4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9C969216-26E2-4F5F-99D2-52307B615FB4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9C969216-26E2-4F5F-99D2-52307B615FB4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
