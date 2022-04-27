@@ -47,8 +47,6 @@ namespace PersonenOrtService.Controllers
         {
             return PersonHelper.GetMeanAge(PersonHelper.Persons);
         }
-<<<<<<< Updated upstream
-=======
 
         [HttpGet]
         [Route("PersonsContainsString/{searchTerm}")]
@@ -81,6 +79,5 @@ namespace PersonenOrtService.Controllers
         }
 
         
->>>>>>> Stashed changes
     }
 }

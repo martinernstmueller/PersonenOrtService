@@ -2,6 +2,7 @@
 using PersonenOrt.Framework;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace PersonOrt.Test
 {
@@ -38,8 +39,6 @@ namespace PersonOrt.Test
             Assert.IsTrue(letters['a'] == 3);
             Assert.IsTrue(letters['b'] == 2);
         }
-<<<<<<< Updated upstream
-=======
 
         [Test]
         public void GetPersons_ContainingString_RetrunsPersons()
@@ -150,7 +149,6 @@ namespace PersonOrt.Test
         //    Console.Write(f);
         //}
 
->>>>>>> Stashed changes
     }
 
 }
