@@ -52,6 +52,23 @@ namespace PersonenOrt.Framework
             return retval;
         }
 
+        public static List<Person> GetPersonsWithPLZ(string pLZ, List<Person> persons)
+        {
+            var retval = new List<Person>();
+            foreach (var person in persons)
+            {
+                if (person.Ort.PLZ == pLZ)
+                    retval.Add(person);
+            }
+            return retval;
+        }
+
+        public static List<Person> GetPersonsWithPLZ_LINQ(string pLZ, List<Person> persons)
+        {
+            return Persons.FindAll(p => p.Ort.PLZ == pLZ);
+        }
+
+
         public static Dictionary<char, int> CountLettersOfName(List<Person> Persons)
         {
             var retval = new Dictionary<char, int>();
