@@ -46,7 +46,7 @@ namespace PersonenOrt.Framework
             foreach (var person in persons)
             {
                 if (person.Name.Contains(searchString))
-                    retval.Add(person); ;
+                    retval.Add(person);
 
             }
             return retval;
