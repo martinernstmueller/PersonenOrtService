@@ -22,11 +22,9 @@ namespace PersonenOrt.Repository.Service.Controllers
         {
             using (var context = new PersonenOrtContext())
             {
-                return context.Person.ToList();
+                return context.Person.Include("Ort").ToList();
             }
         }
-
-
 
         [HttpPut("{id:int}")]
         public Person PutPerson(Person person)
@@ -71,6 +69,11 @@ namespace PersonenOrt.Repository.Service.Controllers
         {
             using (var context = new PersonenOrtContext())
             {
+                Ort dbOrt = context.Ort.FirstOrDefault(p => p == person.Ort);
+                if (dbOrt == null)
+                {
+                    person.Ort = dbOrt;
+                }
                 context.Person.Add(person);
                 context.SaveChanges();
             }
