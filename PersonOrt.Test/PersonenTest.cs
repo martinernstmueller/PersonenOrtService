@@ -58,7 +58,6 @@ namespace PersonOrt.Test
             
         }
 
-<<<<<<< HEAD
 
         [Test]
         public void GetPersons_WithPLZ_ReturnsPersonsWithPLZ()
@@ -150,8 +149,6 @@ namespace PersonOrt.Test
         //    Console.Write(f);
         //}
 
-=======
->>>>>>> main
     }
 
 }

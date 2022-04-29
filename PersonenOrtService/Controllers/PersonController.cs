@@ -49,16 +49,11 @@ namespace PersonenOrtService.Controllers
         }
 
         [HttpGet]
-<<<<<<< HEAD
         [Route("PersonsContainsString/{searchTerm}")]
-=======
-        [Route("PersonsContainsString")]
->>>>>>> main
         public List<Person> PersonsContainsString(string searchTerm)
         {
             return PersonHelper.GetPersonsContainingStringInName(searchTerm, PersonHelper.Persons);
         }
-<<<<<<< HEAD
 
 
         [HttpGet]
@@ -82,9 +77,6 @@ namespace PersonenOrtService.Controllers
         {
             PersonHelper.Persons.Add(person); 
         }
-
         
-=======
->>>>>>> main
     }
 }
