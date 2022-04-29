@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using PersonenOrt.Framework;
 using PersonenOrt.Repository.Service.Context;
 
@@ -8,7 +9,7 @@ namespace PersonenOrt.Repository.Service.Controllers
     [Route("[controller]")]
     public class PersonController : ControllerBase
     {
-        
+
         private readonly ILogger<PersonController> _logger;
 
         public PersonController(ILogger<PersonController> logger)
@@ -21,13 +22,19 @@ namespace PersonenOrt.Repository.Service.Controllers
         {
             using (var context = new PersonenOrtContext())
             {
-                return context.Person.ToList();
+                return context.Person.Include("Ort").ToList();
             }
         }
-        [HttpPut("{id:int}")]
-        public Person PutPerson(int id, Person person)
+
+        [HttpPut]
+        public Person PutPerson(Person person)
         {
-            return null;
+            using (var context = new PersonenOrtContext())
+            {
+                context.Person.Update(person);
+                context.SaveChanges();
+            }
+            return person;
         }
 
         [HttpDelete("{id:int}")]
@@ -35,12 +42,23 @@ namespace PersonenOrt.Repository.Service.Controllers
         {
             using (var context = new PersonenOrtContext())
             {
-                var PersonToBeDeleted = context.Person.FirstOrDefault(p => p.Id == id);
+                var PersonToBeDeleted = context.Person.Include("Ort").FirstOrDefault(p => p.Id == id);
                 if (PersonToBeDeleted == null)
                     return "Person with id " + id + "not found";
 
+                string ortOfDeletedPerson = PersonToBeDeleted.Ort.PLZ;
+
                 context.Person.Remove(PersonToBeDeleted);
+
+                
                 context.SaveChanges();
+
+                if (context.Person.Include("Ort").ToList().FindAll(p => p.Ort.PLZ == ortOfDeletedPerson).Count == 0)
+                {
+                    context.Ort.Remove(PersonToBeDeleted.Ort);
+                    context.SaveChanges();
+                    return "removed Ort";
+                }
             }
             return "Person with id " + id + "deleted";
         }
@@ -51,6 +69,11 @@ namespace PersonenOrt.Repository.Service.Controllers
         {
             using (var context = new PersonenOrtContext())
             {
+                Ort dbOrt = context.Ort.FirstOrDefault(p => p.PLZ == person.Ort.PLZ);
+                if (dbOrt != null)
+                {
+                    person.Ort = dbOrt;
+                }
                 context.Person.Add(person);
                 context.SaveChanges();
             }
