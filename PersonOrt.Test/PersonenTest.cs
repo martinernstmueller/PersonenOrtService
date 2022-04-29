@@ -65,12 +65,12 @@ namespace PersonOrt.Test
             var dornbirn = new Ort()
             {
                 Name = "Dornbirn",
-                PLZ = "6850"
+                PLZ = 6850
             };
             var luschtnou = new Ort()
             {
                 Name = "Luschtnou",
-                PLZ = "6890"
+                PLZ = 6890
             };
 
             var person1 = new Person() { Name = "aaa", Vorname = "aaa", 
@@ -85,9 +85,9 @@ namespace PersonOrt.Test
                 person2
             };
 
-            var pers = PersonHelper.GetPersonsWithPLZ("6850", Persons);
+            var pers = PersonHelper.GetPersonsWithPLZ(6850, Persons);
             Assert.IsTrue(pers.Count == 1);
-            Assert.IsTrue(pers.Any(p => p.Ort.PLZ == "6850"));
+            Assert.IsTrue(pers.Any(p => p.Ort.PLZ == 6850));
             var cont = pers.Contains(person1);
         }
 

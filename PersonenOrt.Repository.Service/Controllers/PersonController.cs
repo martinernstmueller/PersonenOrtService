@@ -32,8 +32,9 @@ namespace PersonenOrt.Repository.Service.Controllers
                 var PersonToBeUpdated = context.Person.FirstOrDefault(p => p.Id == id);
                 if (PersonToBeUpdated == null)
                     return null;
-                context.Person.Update(PersonToBeUpdated);
+                context.Person.Remove(PersonToBeUpdated);
                 context.SaveChanges();
+                PostPerson(PersonToBeUpdated);
             }
             return person;
         }
@@ -47,8 +48,20 @@ namespace PersonenOrt.Repository.Service.Controllers
                 if (PersonToBeDeleted == null)
                     return "Person with id " + id + "not found";
 
+                var ort = context.Ort.FirstOrDefault(ort => PersonToBeDeleted.Ort.PLZ == ort.PLZ);
+                if (ort == null)
+                {
+                    return null;
+                }
+                PersonToBeDeleted.Ort = ort;
+                
                 context.Person.Remove(PersonToBeDeleted);
                 context.SaveChanges();
+
+                if (!context.Person.Any(p => p.Ort == PersonToBeDeleted.Ort))
+                {
+                    context.Ort.Remove(PersonToBeDeleted.Ort);
+                }
             }
             return "Person with id " + id + "deleted";
         }
@@ -59,6 +72,12 @@ namespace PersonenOrt.Repository.Service.Controllers
         {
             using (var context = new PersonenOrtContext())
             {
+                var ort = context.Ort.FirstOrDefault(ort => person.Ort.PLZ == ort.PLZ);
+                if (ort == null)
+                {
+                    return null;
+                }
+                person.Ort = ort;
                 context.Person.Add(person);
                 context.SaveChanges();
             }

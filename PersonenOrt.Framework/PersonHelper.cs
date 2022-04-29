@@ -14,7 +14,7 @@ namespace PersonenOrt.Framework
             {
                 Id = 1,
                 Name = "Hinz",
-                Ort = new Ort { PLZ="6850", Name="Dornbirn" },
+                Ort = new Ort { PLZ=6850, Name="Dornbirn" },
                 Vorname = "aus",
                 Geburtsdatum = new DateTime(2001, 6, 5)
             },
@@ -22,7 +22,7 @@ namespace PersonenOrt.Framework
             {
                 Id = 2,
                 Name = "Kunz",
-                Ort = new Ort { PLZ="6890", Name="Lustenau" },
+                Ort = new Ort { PLZ=6890, Name="Lustenau" },
                 Vorname = "aus",
                 Geburtsdatum= new DateTime(2000, 1, 4)
             }
@@ -52,7 +52,7 @@ namespace PersonenOrt.Framework
             return retval;
         }
 
-        public static List<Person> GetPersonsWithPLZ(string pLZ, List<Person> persons)
+        public static List<Person> GetPersonsWithPLZ(int pLZ, List<Person> persons)
         {
             var retval = new List<Person>();
             foreach (var person in persons)
@@ -63,7 +63,7 @@ namespace PersonenOrt.Framework
             return retval;
         }
 
-        public static List<Person> GetPersonsWithPLZ_LINQ(string pLZ, List<Person> persons)
+        public static List<Person> GetPersonsWithPLZ_LINQ(int pLZ, List<Person> persons)
         {
             return Persons.FindAll(p => p.Ort.PLZ == pLZ);
         }
