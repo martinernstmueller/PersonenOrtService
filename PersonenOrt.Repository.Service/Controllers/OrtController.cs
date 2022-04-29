@@ -24,8 +24,8 @@ namespace PersonenOrt.Repository.Service.Controllers
             }
         }
 
-        [HttpPut("{id:int}")]
-        public Ort PutOrt(int id, Ort ort)
+        [HttpPut]
+        public Ort PutOrt(Ort ort)
         {
             using (var context = new PersonenOrtContext())
             {
