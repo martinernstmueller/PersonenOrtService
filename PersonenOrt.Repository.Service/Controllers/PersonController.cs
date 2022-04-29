@@ -51,6 +51,16 @@ namespace PersonenOrt.Repository.Service.Controllers
         {
             using (var context = new PersonenOrtContext())
             {
+                // check if the Ort allready exists in the database
+                var ort = context.Ort.FirstOrDefault(ort => ort.PLZ == person.Ort.PLZ);
+                if (ort == null)
+                {
+                    ort = new Ort() { Name = person.Ort.Name, PLZ = person.Ort.PLZ };
+                    context.Ort.Add(ort);
+                }
+
+                person.Ort = ort;
+
                 context.Person.Add(person);
                 context.SaveChanges();
             }
