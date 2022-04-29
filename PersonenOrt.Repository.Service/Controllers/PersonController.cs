@@ -8,9 +8,7 @@ namespace PersonenOrt.Repository.Service.Controllers
     [Route("[controller]")]
     public class PersonController : ControllerBase
     {
-
         private readonly ILogger<PersonController> _logger;
-
         public PersonController(ILogger<PersonController> logger)
         {
             _logger = logger;
@@ -35,12 +33,12 @@ namespace PersonenOrt.Repository.Service.Controllers
             {
                 var PersonToBeDeleted = context.Person.FirstOrDefault(p => p.Id == id);
                 if (PersonToBeDeleted == null)
-                    return "Person with id " + id + "not found";
+                    return "Person with id " + id + " not found";
 
                 context.Person.Remove(PersonToBeDeleted);
                 context.SaveChanges();
             }
-            return "Person with id " + id + "deleted";
+            return "Person with id " + id + " deleted";
         }
         [HttpPost(Name = "PostPerson")]
         public Person PostPerson(Person person)

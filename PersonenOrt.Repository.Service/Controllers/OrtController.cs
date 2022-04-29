@@ -9,12 +9,10 @@ namespace PersonenOrt.Repository.Service.Controllers
     public class OrtController : ControllerBase
     {
         private readonly ILogger<OrtController> _logger;
-
         public OrtController(ILogger<OrtController> logger)
         {
             _logger = logger;
         }
-
         [HttpGet(Name = "GetOrts")]
         public IEnumerable<Ort> Get()
         {
@@ -23,13 +21,11 @@ namespace PersonenOrt.Repository.Service.Controllers
                 return context.Ort.ToList();
             }
         }
-
         [HttpPut("{id:int}")]
         public Person PutOrt(int id, Ort ort)
         {
             return null;
         }
-
         [HttpDelete("{id:int}")]
         public string DeleteOrt(String plz)
         {
@@ -37,14 +33,13 @@ namespace PersonenOrt.Repository.Service.Controllers
             {
                 var OrtToBeDeleted = context.Ort.FirstOrDefault(o => o.PLZ == plz);
                 if (OrtToBeDeleted == null)
-                    return "Ort with plz " + plz + "not found";
+                    return "Ort with plz " + plz + " not found";
 
                 context.Ort.Remove(OrtToBeDeleted);
                 context.SaveChanges();
             }
-            return "Person with id " + plz + "deleted";
+            return "Person with id " + plz + " deleted";
         }
-
         [HttpPost(Name = "PostOrt")]
         public Ort PostOrt(Ort ort)
         {
