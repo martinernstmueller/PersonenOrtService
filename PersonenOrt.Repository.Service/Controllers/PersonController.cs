@@ -25,9 +25,19 @@ namespace PersonenOrt.Repository.Service.Controllers
             }
         }
         [HttpPut("{id:int}")]
-        public Person PutPerson(int id, Person person)
+        public String PutPerson(int id, Person person)
         {
-            return null;
+
+            using (var context = new PersonenOrtContext())
+            {
+                var PersonToBeUpdated = context.Person.FirstOrDefault(p => p.Id == id);
+                if (PersonToBeUpdated == null)
+                    return "Person with id " + id + "not found";
+                context.Person.Remove(PersonToBeUpdated);
+                context.Person.Add(person);
+                context.SaveChanges();
+            }
+            return "Person with id " + id + "updated";
         }
 
         [HttpDelete("{id:int}")]
@@ -41,20 +51,36 @@ namespace PersonenOrt.Repository.Service.Controllers
 
                 context.Person.Remove(PersonToBeDeleted);
                 context.SaveChanges();
-            }
+
+                int indicator = 0;
+                foreach (var person in context.Person)
+                    if (person.Ort == PersonToBeDeleted.Ort)
+                        indicator++;
+
+                if (indicator == 0)
+                    context.Ort.Remove(PersonToBeDeleted.Ort);
+                                                                    
+            };
             return "Person with id " + id + "deleted";
         }
 
 
         [HttpPost(Name = "PostPerson")]
-        public Person PostPerson(Person person)
+        public Person PostPerson(Person person1)
         {
             using (var context = new PersonenOrtContext())
             {
-                context.Person.Add(person);
+                var ort = context.Ort.FirstOrDefault(ort => person1.Ort.PLZ == ort.PLZ);
+                if (ort == null)
+                {
+                    return null;
+                }
+                person1.Ort = ort;
+                context.Person.Add(person1);
                 context.SaveChanges();
+
             }
-            return person;
+            return person1;
         }
     }
 }
