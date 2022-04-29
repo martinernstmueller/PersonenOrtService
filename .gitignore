@@ -351,3 +351,6 @@ MigrationBackup/
 
 # Do not check in our Database
 *.db*
+
+# IntelliJ Project
+.idea
