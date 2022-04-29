@@ -24,10 +24,19 @@ namespace PersonenOrt.Repository.Service.Controllers
                 return context.Person.ToList();
             }
         }
-        [HttpPut("{id:int}")]
-        public Person PutPerson(int id, Person person)
+        [HttpPut]
+        public string PutPerson(int id, Person person)
         {
-            return null;
+            using (var context = new PersonenOrtContext())
+            {
+                var PersonToBeDeleted = context.Person.FirstOrDefault(p => p.Id == id);
+                if (PersonToBeDeleted == null)
+                    return "id nicht vorhanden";
+
+                context.Person.Update(person);
+                context.SaveChanges();
+            }
+            return "person with id" + id + "changed";
         }
 
         [HttpDelete("{id:int}")]
