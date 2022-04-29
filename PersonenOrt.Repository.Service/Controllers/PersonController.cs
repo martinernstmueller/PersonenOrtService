@@ -72,7 +72,7 @@ namespace PersonenOrt.Repository.Service.Controllers
                 Ort dbOrt = context.Ort.FirstOrDefault(p => p == person.Ort);
                 if (dbOrt == null)
                 {
-                    person.Ort = dbOrt;
+                    
                 }
                 context.Person.Add(person);
                 context.SaveChanges();
