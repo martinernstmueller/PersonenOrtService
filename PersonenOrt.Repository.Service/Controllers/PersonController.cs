@@ -27,7 +27,20 @@ namespace PersonenOrt.Repository.Service.Controllers
         [HttpPut("{id:int}")]
         public Person PutPerson(int id, Person person)
         {
-            return null;
+            using (var context = new PersonenOrtContext())
+            {
+                var PersonToBeUpdated = context.Person.FirstOrDefault(p => p.Id == id);
+                if (PersonToBeUpdated == null)
+                    return null;
+                PersonToBeUpdated.Name = person.Name;
+                PersonToBeUpdated.Vorname = person.Vorname;
+                PersonToBeUpdated.Geburtsdatum = person.Geburtsdatum;
+                PersonToBeUpdated.Id = person.Id;
+                PersonToBeUpdated.Ort = person.Ort;
+                context.Person.Update(PersonToBeUpdated);
+                context.SaveChanges();
+            }
+            return person;
         }
 
         [HttpDelete("{id:int}")]
@@ -39,8 +52,20 @@ namespace PersonenOrt.Repository.Service.Controllers
                 if (PersonToBeDeleted == null)
                     return "Person with id " + id + "not found";
 
+                var ort = context.Ort.FirstOrDefault(ort => PersonToBeDeleted.Ort.PLZ == ort.PLZ);
+                if (ort == null)
+                {
+                    return null;
+                }
+                PersonToBeDeleted.Ort = ort;
+                
                 context.Person.Remove(PersonToBeDeleted);
                 context.SaveChanges();
+
+                if (!context.Person.Any(p => p.Ort == PersonToBeDeleted.Ort))
+                {
+                    context.Ort.Remove(PersonToBeDeleted.Ort);
+                }
             }
             return "Person with id " + id + "deleted";
         }
@@ -51,6 +76,12 @@ namespace PersonenOrt.Repository.Service.Controllers
         {
             using (var context = new PersonenOrtContext())
             {
+                var ort = context.Ort.FirstOrDefault(ort => person.Ort.PLZ == ort.PLZ);
+                if (ort == null)
+                {
+                    return null;
+                }
+                person.Ort = ort;
                 context.Person.Add(person);
                 context.SaveChanges();
             }

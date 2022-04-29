@@ -58,7 +58,7 @@ namespace PersonenOrtService.Controllers
 
         [HttpGet]
         [Route("PersonsWithPLZ/{PLZ}")]
-        public List<Person> PersonsWithPLZ(string PLZ)
+        public List<Person> PersonsWithPLZ(int PLZ)
         {
             return PersonHelper.GetPersonsWithPLZ_LINQ(PLZ, PersonHelper.Persons);
         }

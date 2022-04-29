@@ -1,4 +1,6 @@
-﻿namespace PersonenOrt.Framework
+﻿using System.Runtime.Serialization;
+
+namespace PersonenOrt.Framework
 {
     public class Person
     {
