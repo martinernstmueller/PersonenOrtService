@@ -1,18 +1,15 @@
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using PersonenOrt.Framework;
-using PersonenOrt.Repository.Service.Context;
+using PersonOrt.Repository.Service.Context;
 
-namespace PersonenOrt.Repository.Service.Controllers
+namespace PersonOrt.Repository.Service.Controllers
 {
+    [Route("api/[controller]")]
     [ApiController]
-    [Route("[controller]")]
     public class OrtController : ControllerBase
     {
-        private readonly ILogger<OrtController> _logger;
-        public OrtController(ILogger<OrtController> logger)
-        {
-            _logger = logger;
-        }
+
         [HttpGet(Name = "GetOrts")]
         public IEnumerable<Ort> Get()
         {
@@ -21,11 +18,27 @@ namespace PersonenOrt.Repository.Service.Controllers
                 return context.Ort.ToList();
             }
         }
+
+
+        [HttpPost(Name = "PostOrt")]
+        public Ort PostOrt(Ort ort)
+        {
+            using (var context = new PersonenOrtContext())
+            {
+                context.Ort.Add(ort);
+                context.SaveChanges();
+            }
+            return ort;
+        }
+
+
         [HttpPut("{id:int}")]
-        public Person PutOrt(int id, Ort ort)
+        public Ort PutOrt(int id, Ort ort)
         {
             return null;
         }
+
+
         [HttpDelete("{id:int}")]
         public string DeleteOrt(String plz)
         {
@@ -39,16 +52,6 @@ namespace PersonenOrt.Repository.Service.Controllers
                 context.SaveChanges();
             }
             return "Person with id " + plz + " deleted";
-        }
-        [HttpPost(Name = "PostOrt")]
-        public Ort PostOrt(Ort ort)
-        {
-            using (var context = new PersonenOrtContext())
-            {
-                context.Ort.Add(ort);
-                context.SaveChanges();
-            }
-            return ort;
         }
     }
 }

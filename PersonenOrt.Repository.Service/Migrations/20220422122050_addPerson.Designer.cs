@@ -4,13 +4,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using PersonenOrt.Repository.Service.Context;
+using PersonenOrt.Repository.Service;
 
 #nullable disable
 
 namespace PersonenOrt.Repository.Service.Migrations
 {
-    [DbContext(typeof(PersonenOrtContext))]
     [Migration("20220422122050_addPerson")]
     partial class addPerson
     {

@@ -3,13 +3,12 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using PersonenOrt.Repository.Service.Context;
+using PersonenOrt.Repository.Service;
 
 #nullable disable
 
 namespace PersonenOrt.Repository.Service.Migrations
 {
-    [DbContext(typeof(PersonenOrtContext))]
     partial class PersonenOrtContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
