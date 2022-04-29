@@ -8,14 +8,13 @@ namespace PersonenOrt.Repository.Service.Controllers
     [Route("[controller]")]
     public class PersonController : ControllerBase
     {
-        
+
         private readonly ILogger<PersonController> _logger;
 
         public PersonController(ILogger<PersonController> logger)
         {
             _logger = logger;
         }
-
         [HttpGet(Name = "GetPersons")]
         public IEnumerable<Person> Get()
         {
@@ -29,7 +28,6 @@ namespace PersonenOrt.Repository.Service.Controllers
         {
             return null;
         }
-
         [HttpDelete("{id:int}")]
         public string DeletePerson(int id)
         {
@@ -44,8 +42,6 @@ namespace PersonenOrt.Repository.Service.Controllers
             }
             return "Person with id " + id + "deleted";
         }
-
-
         [HttpPost(Name = "PostPerson")]
         public Person PostPerson(Person person)
         {

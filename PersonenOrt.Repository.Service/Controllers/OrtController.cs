@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using PersonenOrt.Framework;
+using PersonenOrt.Repository.Service.Context;
 
 namespace PersonenOrt.Repository.Service.Controllers
 {
@@ -17,7 +18,10 @@ namespace PersonenOrt.Repository.Service.Controllers
         [HttpGet(Name = "GetOrts")]
         public IEnumerable<Ort> Get()
         {
-            return new List<Ort>();
+            using (var context = new PersonenOrtContext())
+            {
+                return context.Ort.ToList();
+            }
         }
 
         [HttpPut("{id:int}")]
@@ -27,16 +31,29 @@ namespace PersonenOrt.Repository.Service.Controllers
         }
 
         [HttpDelete("{id:int}")]
-        public string DeleteOrt(int id)
+        public string DeleteOrt(String plz)
         {
-            return "deleted";
+            using (var context = new PersonenOrtContext())
+            {
+                var OrtToBeDeleted = context.Ort.FirstOrDefault(o => o.PLZ == plz);
+                if (OrtToBeDeleted == null)
+                    return "Ort with plz " + plz + "not found";
+
+                context.Ort.Remove(OrtToBeDeleted);
+                context.SaveChanges();
+            }
+            return "Person with id " + plz + "deleted";
         }
 
-
         [HttpPost(Name = "PostOrt")]
-        public Person PostOrt(int id)
+        public Ort PostOrt(Ort ort)
         {
-            return null;
+            using (var context = new PersonenOrtContext())
+            {
+                context.Ort.Add(ort);
+                context.SaveChanges();
+            }
+            return ort;
         }
     }
 }
