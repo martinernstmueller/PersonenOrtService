@@ -27,7 +27,12 @@ namespace PersonenOrt.Repository.Service.Controllers
         [HttpPut("{id:int}")]
         public Person PutPerson(int id, Person person)
         {
-            return null;
+            using (var context = new PersonenOrtContext())
+            {
+                context.Person.Add(person);
+                context.SaveChanges();
+            }
+            return person;
         }
 
         [HttpDelete("{id:int}")]
@@ -51,8 +56,12 @@ namespace PersonenOrt.Repository.Service.Controllers
         {
             using (var context = new PersonenOrtContext())
             {
-                context.Person.Add(person);
-                context.SaveChanges();
+                var persorts = context.Person.FirstOrDefault(a => a.Ort == person.Ort);
+                if (persorts == null)
+                {
+                    context.Person.Add(person);
+                    context.SaveChanges();
+                }
             }
             return person;
         }
