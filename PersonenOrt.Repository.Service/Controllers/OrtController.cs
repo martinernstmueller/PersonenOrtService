@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using PersonenOrt.Framework;
+using PersonenOrt.Repository.Service.Context;
 
 namespace PersonenOrt.Repository.Service.Controllers
 {
@@ -14,29 +15,58 @@ namespace PersonenOrt.Repository.Service.Controllers
             _logger = logger;
         }
 
+    
+
         [HttpGet(Name = "GetOrts")]
-        public IEnumerable<Ort> Get()
+        public IEnumerable<Ort> GetOrts()
         {
-            return new List<Ort>();
+            using (var context = new PersonenOrtContext())
+            {
+                return context.Ort.ToList();
+            }
         }
 
-        [HttpPut("{id:int}")]
-        public Person PutOrt(int id, Ort ort)
+        [HttpPut(Name = "PutOrt")]
+        public String PutOrt(String Name, Ort ort)
         {
-            return null;
+
+            using (var context = new PersonenOrtContext())
+            {
+                var OrtToBeUpdated = context.Ort.FirstOrDefault(p => p.Name == Name);
+                if (OrtToBeUpdated == null)
+                    return "Ort with name " + Name + "not found";
+                context.Ort.Remove(OrtToBeUpdated);
+                context.Ort.Add(ort);
+                context.SaveChanges();
+            }
+            return "Ort with name " + Name + "updated";
         }
 
-        [HttpDelete("{id:int}")]
-        public string DeleteOrt(int id)
+        [HttpDelete(Name = "DeleteOrt")]
+        public String DeleteOrt(String Name)
         {
-            return "deleted";
+
+            using (var context = new PersonenOrtContext())
+            {
+                var OrtToBeUpdated = context.Ort.FirstOrDefault(p => p.Name == Name);
+                if (OrtToBeUpdated == null)
+                    return "Ort with name " + Name + "not found";
+                context.Ort.Remove(OrtToBeUpdated);
+                context.SaveChanges();
+            }
+            return "Ort with name " + Name + " removed";
         }
 
 
         [HttpPost(Name = "PostOrt")]
-        public Person PostOrt(int id)
+        public Ort PostOrt(Ort ort)
         {
-            return null;
+            using (var context = new PersonenOrtContext())
+            {
+                context.Ort.Add(ort);
+                context.SaveChanges();
+            }
+            return ort;
         }
     }
 }
