@@ -46,14 +46,14 @@ namespace PersonenOrt.Repository.Service.Controllers
                 if (PersonToBeDeleted == null)
                     return "Person with id " + id + "not found";
 
-                String ortOfDeletedPerson = PersonToBeDeleted.Ort.PLZ;
+                string ortOfDeletedPerson = PersonToBeDeleted.Ort.PLZ;
 
                 context.Person.Remove(PersonToBeDeleted);
 
                 
                 context.SaveChanges();
 
-                if (context.Person.ToList().FindAll(p => p.Ort.PLZ == ortOfDeletedPerson).Count == 0)
+                if (context.Person.Include("Ort").ToList().FindAll(p => p.Ort.PLZ == ortOfDeletedPerson).Count == 0)
                 {
                     context.Ort.Remove(PersonToBeDeleted.Ort);
                     context.SaveChanges();
