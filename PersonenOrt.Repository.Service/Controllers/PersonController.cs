@@ -32,9 +32,13 @@ namespace PersonenOrt.Repository.Service.Controllers
                 var PersonToBeUpdated = context.Person.FirstOrDefault(p => p.Id == id);
                 if (PersonToBeUpdated == null)
                     return null;
-                context.Person.Remove(PersonToBeUpdated);
+                PersonToBeUpdated.Name = person.Name;
+                PersonToBeUpdated.Vorname = person.Vorname;
+                PersonToBeUpdated.Geburtsdatum = person.Geburtsdatum;
+                PersonToBeUpdated.Id = person.Id;
+                PersonToBeUpdated.Ort = person.Ort;
+                context.Person.Update(PersonToBeUpdated);
                 context.SaveChanges();
-                PostPerson(PersonToBeUpdated);
             }
             return person;
         }

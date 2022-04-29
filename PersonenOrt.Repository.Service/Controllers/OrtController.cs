@@ -33,8 +33,9 @@ namespace PersonenOrt.Repository.Service.Controllers
                 var OrtToBeUpdated = context.Ort.FirstOrDefault(o => o.PLZ == id);
                 if (OrtToBeUpdated == null)
                     return null;
-                context.Ort.Remove(OrtToBeUpdated);
-                context.Ort.Add(ort);
+                OrtToBeUpdated.Name = ort.Name;
+                OrtToBeUpdated.PLZ = ort.PLZ;
+                context.Ort.Update(OrtToBeUpdated);
                 context.SaveChanges();
             }
             return null;
