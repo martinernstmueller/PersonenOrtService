@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using PersonenOrt.Framework;
+using PersonenOrt.Repository.Service.Context;
 
 namespace PersonenOrt.Repository.Service.Controllers
 {
@@ -14,29 +15,60 @@ namespace PersonenOrt.Repository.Service.Controllers
             _logger = logger;
         }
 
-        [HttpGet(Name = "GetOrts")]
+        [HttpGet, Route("OrtGet")]
         public IEnumerable<Ort> Get()
         {
-            return new List<Ort>();
+            using (var context = new PersonenOrtContext())
+            {
+                return context.Ort.ToList();
+            }
         }
 
-        [HttpPut("{id:int}")]
-        public Person PutOrt(int id, Ort ort)
+        
+
+        [HttpPost, Route("OrtPost")]
+        public Ort OrtPost(Ort ort)
         {
-            return null;
+            using (var context = new PersonenOrtContext())
+            {
+                context.Ort.Add(ort);
+                context.SaveChanges();
+            }
+            return ort;
         }
 
-        [HttpDelete("{id:int}")]
-        public string DeleteOrt(int id)
+        [HttpPut, Route("OrtPut")]
+        public String PutOrt(string name, Ort ort)
         {
-            return "deleted";
+            using (var context = new PersonenOrtContext())
+            {
+                var OrtToBeUpdated = context.Ort.FirstOrDefault(x => x.Name == name);
+                if (OrtToBeUpdated == null)
+                {
+                    throw new Exception();
+                }
+
+                context.Ort.Remove(OrtToBeUpdated);
+                context.Ort.Add(ort);
+                context.SaveChanges();
+
+                return "Ort has been updated!";
+            }
         }
 
-
-        [HttpPost(Name = "PostOrt")]
-        public Person PostOrt(int id)
+        [HttpDelete, Route("OrtDelete")]
+        public string DeleteOrt(string name)
         {
-            return null;
+            using (var context = new PersonenOrtContext())
+            {
+                var OrtToBeDeleted = context.Ort.FirstOrDefault(p => p.Name == name);
+                if (OrtToBeDeleted == null)
+                    return "Ort with Name " + name + " not found";
+
+                context.Ort.Remove(OrtToBeDeleted);
+                context.SaveChanges();
+            }
+            return "Ort with Name " + name + " deleted";
         }
     }
 }
