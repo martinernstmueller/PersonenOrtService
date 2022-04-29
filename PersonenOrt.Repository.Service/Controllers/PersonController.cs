@@ -27,7 +27,15 @@ namespace PersonenOrt.Repository.Service.Controllers
         [HttpPut("{id:int}")]
         public Person PutPerson(int id, Person person)
         {
-            return null;
+            using (var context = new PersonenOrtContext())
+            {
+                var PersonToBeUpdated = context.Person.FirstOrDefault(p => p.Id == id);
+                if (PersonToBeUpdated == null)
+                    return null;
+                context.Person.Update(PersonToBeUpdated);
+                context.SaveChanges();
+            }
+            return person;
         }
 
         [HttpDelete("{id:int}")]
