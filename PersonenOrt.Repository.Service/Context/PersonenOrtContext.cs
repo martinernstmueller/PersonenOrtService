@@ -1,19 +1,22 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PersonenOrt.Framework;
 
-namespace PersonenOrt.Repository.Service.Context
+namespace PersonOrt.Repository.Service.Context
 {
     public class PersonenOrtContext : DbContext
     {
         public DbSet<Person> Person { get; set; }
+        public DbSet<Ort> Ort { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlite("Data Source=PersonOrtDB.db;");
+            optionsBuilder.UseSqlite("Data Source=CustomerDB.db;");
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Person>().ToTable("Person");
+            modelBuilder.Entity<Ort>().ToTable("Ort");
         }
     }
 }
