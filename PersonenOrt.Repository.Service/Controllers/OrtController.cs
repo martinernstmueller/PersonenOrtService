@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using PersonenOrt.Framework;
+using PersonenOrt.Repository.Service.Context;
 
 namespace PersonenOrt.Repository.Service.Controllers
 {
@@ -17,26 +18,53 @@ namespace PersonenOrt.Repository.Service.Controllers
         [HttpGet(Name = "GetOrts")]
         public IEnumerable<Ort> Get()
         {
-            return new List<Ort>();
+            using (var context = new PersonenOrtContext())
+            {
+                return context.Ort.ToList();
+            }
         }
 
         [HttpPut("{id:int}")]
-        public Person PutOrt(int id, Ort ort)
+        public string PutOrt(string id, Ort ort)
         {
-            return null;
+            using (var context = new PersonenOrtContext())
+            {
+                var OrtToBeUpdated = context.Ort.FirstOrDefault(p => p.PLZ == id);
+                if (OrtToBeUpdated == null)
+                    return "Ort with PLZ " + id + " not found";
+
+                context.Ort.Remove(OrtToBeUpdated);
+                context.Ort.Add(ort);
+                context.SaveChanges();
+            }
+            return "Ort with PLZ " + id + " updated";
         }
 
         [HttpDelete("{id:int}")]
-        public string DeleteOrt(int id)
+        public string DeleteOrt(string id)
         {
-            return "deleted";
+            using (var context = new PersonenOrtContext())
+            {
+                var OrtToBeDeleted = context.Ort.FirstOrDefault(p => p.PLZ == id);
+                if (OrtToBeDeleted == null)
+                    return "Ort with PLZ " + id + " not found";
+
+                context.Ort.Remove(OrtToBeDeleted);
+                context.SaveChanges();
+            }
+            return "Ort with PLZ " + id + " deleted";
         }
 
 
         [HttpPost(Name = "PostOrt")]
-        public Person PostOrt(int id)
+        public Ort PostOrt(Ort ort)
         {
-            return null;
+            using (var context = new PersonenOrtContext())
+            {
+                context.Ort.Add(ort);
+                context.SaveChanges();
+            }
+            return ort;
         }
     }
 }
