@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using PersonenOrt.Framework;
+using PersonenOrt.Repository.Service.Context;
 
 namespace PersonenOrt.Repository.Service.Controllers
 {
@@ -17,7 +18,10 @@ namespace PersonenOrt.Repository.Service.Controllers
         [HttpGet(Name = "GetOrts")]
         public IEnumerable<Ort> Get()
         {
-            return new List<Ort>();
+            using (var context = new PersonenOrtContext())
+            {
+                return context.Ort.ToList();
+            }
         }
 
         [HttpPut("{id:int}")]
@@ -34,9 +38,24 @@ namespace PersonenOrt.Repository.Service.Controllers
 
 
         [HttpPost(Name = "PostOrt")]
-        public Person PostOrt(int id)
+        public HttpResponseMessage PostOrt(Ort ort)
         {
-            return null;
+            using (var context = new PersonenOrtContext())
+            {
+                var retval = new HttpResponseMessage();
+
+                if (context.Ort.FirstOrDefault(o => o.PLZ == ort.PLZ) != null)
+                {
+                    retval.StatusCode = System.Net.HttpStatusCode.Conflict;
+                    retval.Content = new StringContent("Add Ort with PLZ " + ort.PLZ + " failed! PLZ already exists.");
+                    return retval;
+                }
+                    ;
+                context.Ort.Add(ort);
+                context.SaveChanges();
+                retval.Content = new StringContent("Add Ort with PLZ " + ort.PLZ + " to out Database");
+                return retval;
+            }
         }
     }
 }
