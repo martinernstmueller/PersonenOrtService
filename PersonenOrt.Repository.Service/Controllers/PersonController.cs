@@ -50,7 +50,6 @@ namespace PersonenOrt.Repository.Service.Controllers
 
                 context.Person.Remove(PersonToBeDeleted);
 
-                
                 context.SaveChanges();
 
                 if (context.Person.Include("Ort").ToList().FindAll(p => p.Ort.PLZ == ortOfDeletedPerson).Count == 0)
@@ -62,7 +61,6 @@ namespace PersonenOrt.Repository.Service.Controllers
             }
             return "Person with id " + id + "deleted";
         }
-
 
         [HttpPost(Name = "PostPerson")]
         public Person PostPerson(Person person)

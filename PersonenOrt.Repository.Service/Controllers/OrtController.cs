@@ -1,3 +1,4 @@
+using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using PersonenOrt.Framework;
 using PersonenOrt.Repository.Service.Context;
@@ -52,14 +53,22 @@ namespace PersonenOrt.Repository.Service.Controllers
 
 
         [HttpPost(Name = "PostOrt")]
-        public Ort PostOrt(Ort ort)
+        public ActionResult PostOrt(Ort ort)
         {
             using (var context = new PersonenOrtContext())
             {
+
+                if (context.Ort.FirstOrDefault(o => o.PLZ == ort.PLZ) != null)
+                {
+                    return Problem(detail:"hallo");
+                }
                 context.Ort.Add(ort);
                 context.SaveChanges();
+                var retval = new HttpResponseMessage();
+                retval.StatusCode = HttpStatusCode.OK;
+                retval.Content = new StringContent("Added Ort with PLZ " + ort.PLZ);
+                return Ok(ort); 
             }
-            return ort;
         }
     }
 }
