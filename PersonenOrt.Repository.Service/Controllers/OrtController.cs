@@ -37,7 +37,7 @@ namespace PersonenOrt.Repository.Service.Controllers
 
                 ortDB.Name = ort.Name;
                 context.SaveChanges();
-                return Ok(ort);
+                return Ok(ortDB);
             }
         }
 
