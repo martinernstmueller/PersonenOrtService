@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using PersonenOrt.Framework;
+using PersonenOrt.Repository.Service.Context;
 
 namespace PersonenOrt.Repository.Service.Controllers
 {
@@ -8,7 +9,6 @@ namespace PersonenOrt.Repository.Service.Controllers
     public class OrtController : ControllerBase
     {
         private readonly ILogger<OrtController> _logger;
-
         public OrtController(ILogger<OrtController> logger)
         {
             _logger = logger;
@@ -17,26 +17,53 @@ namespace PersonenOrt.Repository.Service.Controllers
         [HttpGet(Name = "GetOrts")]
         public IEnumerable<Ort> Get()
         {
-            return new List<Ort>();
+            using (var context = new PersonenOrtContext())
+            {
+                return context.Ort.ToList();
+            }
         }
 
-        [HttpPut("{id:int}")]
-        public Person PutOrt(int id, Ort ort)
+        [HttpPut("{plz}")]
+        public IActionResult PutOrt(String plz, Ort ort)
         {
-            return null;
+            if (plz != ort.PLZ && ort.PLZ != null)
+            {
+                return Conflict("PLZ in query differs from PLZ in path");
+            }
+            using (var context = new PersonenOrtContext())
+            {
+                Ort? ortDB = context.Ort.FirstOrDefault(o => o.PLZ == plz);
+                if (ortDB == null)
+                {
+                    return Conflict("Plz " + plz + " not found in Database");
+                }
+                ortDB.Name = ort.Name;
+                context.SaveChanges();
+                return Ok(ortDB);
+            }
         }
 
         [HttpDelete("{id:int}")]
-        public string DeleteOrt(int id)
+        public IActionResult DeleteOrt(int id)
         {
-            return "deleted";
+            return Ok("deleted");
         }
 
 
         [HttpPost(Name = "PostOrt")]
-        public Person PostOrt(int id)
+        public IActionResult PostOrt(Ort ort)
         {
-            return null;
+            using (var context = new PersonenOrtContext())
+            {
+                if (context.Ort.FirstOrDefault(o => o.PLZ == ort.PLZ) != null)
+                {
+                    return Problem(detail: ("Add Ort with PLZ " + ort.PLZ + " failed! PLZ already exists."));
+                }
+
+                context.Ort.Add(ort);
+                context.SaveChanges();
+                return Ok("Add Ort with PLZ " + ort.PLZ + " to out Database");
+            }
         }
     }
 }
