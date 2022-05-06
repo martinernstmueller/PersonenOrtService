@@ -9,8 +9,17 @@ namespace PersonenOrt.Framework
 {
     public class Ort
     {
-        [Key]
-        public string PLZ { get; set; }
+        [Key] public string PLZ { get; set; }
         public string Name { get; set; }
+
+        public Ort(string Name, string PLZ)
+        {
+            this.PLZ = PLZ;
+            this.Name = Name;
+        }
+
+        public Ort()
+        {
+        }
     }
 }

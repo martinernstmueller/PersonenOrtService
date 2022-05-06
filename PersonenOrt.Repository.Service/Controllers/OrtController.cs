@@ -53,21 +53,23 @@ namespace PersonenOrt.Repository.Service.Controllers
 
 
         [HttpPost(Name = "PostOrt")]
-        public ActionResult PostOrt(Ort ort)
+        public HttpResponseMessage PostOrt(Ort ort)
         {
             using (var context = new PersonenOrtContext())
             {
+                var retval = new HttpResponseMessage();
 
                 if (context.Ort.FirstOrDefault(o => o.PLZ == ort.PLZ) != null)
                 {
-                    return Problem(detail:"hallo");
+                    retval.StatusCode = System.Net.HttpStatusCode.Conflict;
+                    retval.Content = new StringContent("Add Ort with PLZ " + ort.PLZ + " failed! PLZ already exists.");
+                    return retval;
                 }
+                ;
                 context.Ort.Add(ort);
                 context.SaveChanges();
-                var retval = new HttpResponseMessage();
-                retval.StatusCode = HttpStatusCode.OK;
-                retval.Content = new StringContent("Added Ort with PLZ " + ort.PLZ);
-                return Ok(ort); 
+                retval.Content = new StringContent("Add Ort with PLZ " + ort.PLZ + " to out Database");
+                return retval;
             }
         }
     }

@@ -22,7 +22,7 @@ namespace PersonenOrt.Repository.Service.Controllers
         {
             using (var context = new PersonenOrtContext())
             {
-                return context.Person.Include("Ort").ToList();
+                return context.Person.Include(p => p.Ort).ToList();
             }
         }
 
@@ -67,11 +67,12 @@ namespace PersonenOrt.Repository.Service.Controllers
         {
             using (var context = new PersonenOrtContext())
             {
-                Ort dbOrt = context.Ort.FirstOrDefault(p => p.PLZ == person.Ort.PLZ);
-                if (dbOrt != null)
+                Ort? dbOrt = context.Ort.FirstOrDefault(p => p.PLZ == person.Ort.PLZ);
+                if (dbOrt == null)
                 {
-                    person.Ort = dbOrt;
+                    context.Ort.Add(new Ort(person.Ort.Name, person.Ort.PLZ));
                 }
+                person.Ort = dbOrt;
                 context.Person.Add(person);
                 context.SaveChanges();
             }
