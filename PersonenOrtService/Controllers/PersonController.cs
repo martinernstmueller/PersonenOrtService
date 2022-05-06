@@ -1,14 +1,18 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using PersonenOrt.Framework;
+using PersonenOrt.Repository.Service.Context;
 
-namespace PersonenOrtService.Controllers
+namespace PersonenOrt.Repository.Service.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class PersonenController : ControllerBase
+    public class PersonController : ControllerBase
     {
-        private readonly ILogger<PersonenController> _logger;
-        public PersonenController(ILogger<PersonenController> logger)
+
+        private readonly ILogger<PersonController> _logger;
+
+        public PersonController(ILogger<PersonController> logger)
         {
             _logger = logger;
         }
@@ -16,67 +20,42 @@ namespace PersonenOrtService.Controllers
         [HttpGet(Name = "GetPersons")]
         public IEnumerable<Person> Get()
         {
-            int summeAlter = 0;
-            foreach (var person in PersonHelper.Persons)
+            using (var context = new PersonenOrtContext())
             {
-                summeAlter += DateTime.Now.Year -  person.Alter;
+                return context.Person.Include(prop => prop.Ort).ToList();
             }
-
-            _logger.LogDebug("Get all persons...");
-            return PersonHelper.Persons.ToArray();
         }
-
-        [HttpGet]
-        [Route("PersonGetMeanAge")]
-        public double PersonMeanAge()
+        [HttpPut("{id:int}")]
+        public Person PutPerson(int id, Person person)
         {
-            return PersonHelper.GetMeanAge(PersonHelper.Persons);
+            return null;
         }
 
-        [HttpGet]
-        [Route("PersonContainingStringInName/{searchString}")]
-        public List<Person> PersonContainingStringInName(string searchString)
+        [HttpDelete("{id:int}")]
+        public string DeletePerson(int id)
         {
-            return PersonHelper.GetPersonsContainingStringInName(searchString, PersonHelper.Persons);
+            using (var context = new PersonenOrtContext())
+            {
+                var PersonToBeDeleted = context.Person.FirstOrDefault(p => p.Id == id);
+                if (PersonToBeDeleted == null)
+                    return "Person with id " + id + "not found";
+
+                context.Person.Remove(PersonToBeDeleted);
+                context.SaveChanges();
+            }
+            return "Person with id " + id + "deleted";
         }
 
 
-        [HttpGet]
-        [Route("PersonNameLetterCount")]
-        public double PersonNameLetterCount()
+        [HttpPost(Name = "PostPerson")]
+        public Person PostPerson(Person person)
         {
-            return PersonHelper.GetMeanAge(PersonHelper.Persons);
+            using (var context = new PersonenOrtContext())
+            {
+                context.Person.Add(person);
+                context.SaveChanges();
+            }
+            return person;
         }
-
-        [HttpGet]
-        [Route("PersonsContainsString/{searchTerm}")]
-        public List<Person> PersonsContainsString(string searchTerm)
-        {
-            return PersonHelper.GetPersonsContainingStringInName(searchTerm, PersonHelper.Persons);
-        }
-
-
-        [HttpGet]
-        [Route("PersonsWithPLZ/{PLZ}")]
-        public List<Person> PersonsWithPLZ(string PLZ)
-        {
-            return PersonHelper.GetPersonsWithPLZ_LINQ(PLZ, PersonHelper.Persons);
-        }
-
-        [HttpDelete]
-        [Route("DeletePerson/{personId}")]
-        public void DeletePerson(int personId)
-        {
-            var personToBeRemoved = PersonHelper.Persons.FirstOrDefault(p => p.Id == personId);
-            if (personToBeRemoved != null)
-              PersonHelper.Persons.Remove(personToBeRemoved);
-        }
-
-        [HttpPut]
-        public void PostPerson(Person person)
-        {
-            PersonHelper.Persons.Add(person); 
-        }
-        
     }
 }

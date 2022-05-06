@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\PersonenOrt.Framework\PersonenOrt.Framework.csproj" />
+    <ProjectReference Include="..\PersonenOrt.Repository.Service\PersonenOrt.Repository.Service.csproj" />
   </ItemGroup>
 
 </Project>
