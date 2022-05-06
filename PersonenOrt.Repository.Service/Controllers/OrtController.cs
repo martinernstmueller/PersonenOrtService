@@ -24,10 +24,23 @@ namespace PersonenOrt.Repository.Service.Controllers
             }
         }
 
-        [HttpPut("{id:int}")]
-        public IActionResult PutOrt(int id, Ort ort)
+        [HttpPut("{PLZ}")]
+        public IActionResult PutOrt(string PLZ, Ort ort)
         {
-            return Ok("update");
+            if (PLZ != ort.PLZ && ort.PLZ != null)
+            {
+                return Ok("hallo");
+            }
+            ort.PLZ = PLZ;
+            using (var context = new PersonenOrtContext())
+            {
+                Ort dbOrt = context.Ort.FirstOrDefault(o => o.PLZ == PLZ);
+                if (dbOrt == null)
+                    return Conflict("fehler existiert nicht");
+                dbOrt.Name = ort.Name;
+                context.SaveChanges();
+                return Ok(ort);
+            }
         }
 
         [HttpDelete("{id:int}")]
@@ -44,7 +57,7 @@ namespace PersonenOrt.Repository.Service.Controllers
             {
                 if (context.Ort.FirstOrDefault(o => o.PLZ == ort.PLZ) != null)
                 {
-                    return Problem(detail: ("Add Ort with PLZ " + ort.PLZ + " failed! PLZ already exists."));
+                    return Conflict(error: "Add Ort with PLZ " + ort.PLZ + " failed! PLZ already exists.");
                 }
 
                 context.Ort.Add(ort);
