@@ -9,7 +9,6 @@ namespace PersonenOrt.Repository.Service.Controllers
     public class OrtController : ControllerBase
     {
         private readonly ILogger<OrtController> _logger;
-
         public OrtController(ILogger<OrtController> logger)
         {
             _logger = logger;
