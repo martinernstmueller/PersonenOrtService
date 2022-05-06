@@ -41,14 +41,14 @@ namespace PersonenOrt.Repository.Service.Controllers
                 var PersonToBeDeleted = context.Person.FirstOrDefault(p => p.Id == id);
                 if (PersonToBeDeleted == null)
                     return this.StatusCode(
-                   StatusCodes.Status200OK,
+                   StatusCodes.Status404NotFound,
                    "Person with " + id + " Not found");
 
                 context.Person.Remove(PersonToBeDeleted);
                 context.SaveChanges();
             }
             return this.StatusCode(
-                    StatusCodes.Status200OK,
+                    StatusCodes.Status409Conflict,
                     "Person with " + id + " has been deleted");
         }
 
