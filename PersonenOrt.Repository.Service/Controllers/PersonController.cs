@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using PersonenOrt.Framework;
 using PersonenOrt.Repository.Service.Context;
 
@@ -21,7 +22,7 @@ namespace PersonenOrt.Repository.Service.Controllers
         {
             using (var context = new PersonenOrtContext())
             {
-                return context.Person.ToList();
+                return context.Person.Include(p => p.Ort).ToList();
             }
         }
         [HttpPut("{id:int}")]
@@ -47,14 +48,25 @@ namespace PersonenOrt.Repository.Service.Controllers
 
 
         [HttpPost(Name = "PostPerson")]
-        public Person PostPerson(Person person)
+        public HttpResponseMessage PostPerson(Person person)
         {
+            var retval = new HttpResponseMessage();
             using (var context = new PersonenOrtContext())
             {
+                Ort? ort = context.Ort.FirstOrDefault(o => o.PLZ == person.Ort.PLZ);
+                if (ort == null)
+                {
+                    ort = new Ort(person.Ort.Name, person.Ort.PLZ);
+                    context.Ort.Add(ort); 
+                }
+                person.Ort = ort;
                 context.Person.Add(person);
                 context.SaveChanges();
+                retval.StatusCode = System.Net.HttpStatusCode.OK;
+                retval.Content = new StringContent("Add Person with Name " + person.Name + " succeeded.");
+                return retval;
+
             }
-            return person;
         }
     }
 }

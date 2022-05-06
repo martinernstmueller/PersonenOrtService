@@ -46,6 +46,7 @@ namespace PersonenOrt.Repository.Service.Controllers
 
                 if (context.Ort.FirstOrDefault(o => o.PLZ == ort.PLZ) != null)
                 {
+                    
                     retval.StatusCode = System.Net.HttpStatusCode.Conflict;
                     retval.Content = new StringContent("Add Ort with PLZ " + ort.PLZ + " failed! PLZ already exists.");
                     return retval;
