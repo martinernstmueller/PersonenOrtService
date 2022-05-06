@@ -25,9 +25,19 @@ namespace PersonenOrt.Repository.Service.Controllers
             }
         }
         [HttpPut("{id:int}")]
-        public Person PutPerson(int id, Person person)
-        {
-            return null;
+        public String PutPerson(int id, Person person)
+        { 
+            using(var context = new PersonenOrtContext())
+            {
+                var PersonToBeDeleted = context.Person.FirstOrDefault(p => p.Id == id);
+                if (PersonToBeDeleted == null)
+                    return "Person with id " + id + "not found";
+
+                context.Person.Remove(PersonToBeDeleted);
+                context.Person.Add(person);
+                context.SaveChanges();
+            }
+            return "Person with id " + id + " has been updated";
         }
 
         [HttpDelete("{id:int}")]
@@ -51,8 +61,20 @@ namespace PersonenOrt.Repository.Service.Controllers
         {
             using (var context = new PersonenOrtContext())
             {
-                context.Person.Add(person);
+                Ort? ort = context.Ort.FirstOrDefault(o => o.PLZ == person.Ort.PLZ);
+
+                if(context.Ort.FirstOrDefault(o => o.PLZ == person.Ort.PLZ) != null)
+                {
+                    ort = new Ort(person.Ort.Name, person.Ort.PLZ);
+                    context.Ort.Add(ort);
+                }
+
+                person.Ort = ort;
+                context.Person.Add(person);  
                 context.SaveChanges();
+                var retval = new HttpResponseMessage();
+                retval.StatusCode = System.Net.HttpStatusCode.OK;
+                retval.RequestMessage = new HttpRequestMessage(HttpMethod.Post, "Add Person added to DB");
             }
             return person;
         }
