@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using PersonenOrt.Framework;
 using PersonenOrt.Repository.Service.Context;
+using System.Net.Http;
 
 namespace PersonenOrt.Repository.Service.Controllers
 {
@@ -61,8 +62,17 @@ namespace PersonenOrt.Repository.Service.Controllers
         {
             using (var context = new PersonenOrtContext())
             {
+                var retval = new HttpResponseMessage();
+
+                if (context.Ort.FirstOrDefault(o => o.PLZ == ort.PLZ) != null)
+                {
+                    retval.StatusCode = System.Net.HttpStatusCode.Conflict;
+                    retval.Content = new StringContent("Add Ort wirht PLZ " + ort.PLZ + " to out Database failed");
+                }
                 context.Ort.Add(ort);
                 context.SaveChanges();
+                retval.StatusCode = System.Net.HttpStatusCode.OK;
+                retval.RequestMessage = new HttpRequestMessage(HttpMethod.Post, "Add Ort wirht PLZ " + ort.PLZ + " to out Database"); 
             }
             return ort;
         }
