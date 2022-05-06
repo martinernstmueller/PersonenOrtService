@@ -28,6 +28,7 @@ namespace PersonenOrt.Framework
             }
         };
         public static List<Ort> Orts = new List<Ort>();
+    
 
         public static double GetMeanAge(List<Person> persons)
         {
