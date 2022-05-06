@@ -24,17 +24,21 @@ namespace PersonenOrt.Repository.Service.Controllers
         }
 
         [HttpPut("{id:int}")]
-        public Person PutOrt(int id, Ort ort)
+        public IActionResult PutOrt(int id, Ort ort)
         {
-            return null;
+            return this.StatusCode(
+                StatusCodes.Status501NotImplemented,
+                "Put of Ort needs to be implemented.");
         }
 
         [HttpDelete("{id:int}")]
-        public string DeleteOrt(int id)
+        public IActionResult DeleteOrt(int id)
         {
-            return "deleted";
-        }
+            return this.StatusCode(
+                StatusCodes.Status501NotImplemented,
+                "Delete of Ort needs to be implemented.");
 
+        }
 
         [HttpPost(Name = "PostOrt")]
         public IActionResult PostOrt(Ort ort)
