@@ -25,37 +25,31 @@ namespace PersonenOrt.Repository.Service.Controllers
         }
 
         [HttpPut("{id:int}")]
-        public Person PutOrt(int id, Ort ort)
+        public IActionResult PutOrt(int id, Ort ort)
         {
-            return null;
+            return Ok("update");
         }
 
         [HttpDelete("{id:int}")]
-        public string DeleteOrt(int id)
+        public IActionResult DeleteOrt(int id)
         {
-            return "deleted";
+            return Ok("deleted");
         }
 
 
         [HttpPost(Name = "PostOrt")]
-        public HttpResponseMessage PostOrt(Ort ort)
+        public IActionResult PostOrt(Ort ort)
         {
             using (var context = new PersonenOrtContext())
             {
-                var retval = new HttpResponseMessage();
-
                 if (context.Ort.FirstOrDefault(o => o.PLZ == ort.PLZ) != null)
                 {
-                    
-                    retval.StatusCode = System.Net.HttpStatusCode.Conflict;
-                    retval.Content = new StringContent("Add Ort with PLZ " + ort.PLZ + " failed! PLZ already exists.");
-                    return retval;
+                    return Problem(detail: ("Add Ort with PLZ " + ort.PLZ + " failed! PLZ already exists."));
                 }
-                    ;
+
                 context.Ort.Add(ort);
                 context.SaveChanges();
-                retval.Content = new StringContent("Add Ort with PLZ " + ort.PLZ + " to out Database");
-                return retval;
+                return Ok("Add Ort with PLZ " + ort.PLZ + " to out Database");
             }
         }
     }
