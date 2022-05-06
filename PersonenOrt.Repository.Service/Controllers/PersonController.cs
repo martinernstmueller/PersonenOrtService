@@ -26,24 +26,28 @@ namespace PersonenOrt.Repository.Service.Controllers
             }
         }
         [HttpPut("{id:int}")]
-        public Person PutPerson(int id, Person person)
+        public IActionResult PutPerson(int id, Person person)
         {
             return null;
         }
 
         [HttpDelete("{id:int}")]
-        public string DeletePerson(int id)
+        public IActionResult DeletePerson(int id)
         {
             using (var context = new PersonenOrtContext())
             {
                 var PersonToBeDeleted = context.Person.FirstOrDefault(p => p.Id == id);
                 if (PersonToBeDeleted == null)
-                    return "Person with id " + id + "not found";
+                    return this.StatusCode(
+                    StatusCodes.Status409Conflict,
+                    "Person with id " + id + " not found.");
 
                 context.Person.Remove(PersonToBeDeleted);
                 context.SaveChanges();
             }
-            return "Person with id " + id + "deleted";
+            return this.StatusCode(
+                    StatusCodes.Status200OK,
+                    "Person with id " + id + " deleted."); 
         }
 
 

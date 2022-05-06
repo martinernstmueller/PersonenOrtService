@@ -24,15 +24,28 @@ namespace PersonenOrt.Repository.Service.Controllers
         }
 
         [HttpPut("{id:int}")]
-        public Person PutOrt(int id, Ort ort)
+        public IActionResult PutOrt(int id, Ort ort)
         {
             return null;
         }
 
-        [HttpDelete("{id:int}")]
-        public string DeleteOrt(int id)
+        [HttpDelete("{plz:string}")]
+        public IActionResult DeleteOrt(string plz)
         {
-            return "deleted";
+            using (var context = new PersonenOrtContext())
+            {
+                var OrtToBeDeleted = context.Ort.FirstOrDefault(p => p.PLZ == plz);
+                if (OrtToBeDeleted == null)
+                    return this.StatusCode(
+                    StatusCodes.Status409Conflict,
+                    "Ort with plz " + plz + " not found.");
+
+                context.Ort.Remove(OrtToBeDeleted);
+                context.SaveChanges();
+            }
+            return this.StatusCode(
+                    StatusCodes.Status200OK,
+                    "Ort with plz " + plz + " deleted.");
         }
 
 
