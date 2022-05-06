@@ -23,16 +23,20 @@ namespace PersonenOrt.Repository.Service.Controllers
             }
         }
 
-        [HttpPut("{id:int}")]
-        public Person PutOrt(int id, Ort ort)
+        [HttpPut("{PLZ}")]
+        public IActionResult PutOrt(string PLZ, Ort ort)
         {
-            return null;
+            return this.StatusCode(
+                    StatusCodes.Status200OK,
+                    "ort with " + PLZ + " has been Changed");
         }
 
-        [HttpDelete("{id:int}")]
-        public string DeleteOrt(int id)
+        [HttpDelete("{PLZ}")]
+        public IActionResult DeleteOrt(string PLZ)
         {
-            return "deleted";
+            return this.StatusCode(
+                    StatusCodes.Status200OK,
+                    "ort with " + PLZ + " has been deleted");
         }
 
 
