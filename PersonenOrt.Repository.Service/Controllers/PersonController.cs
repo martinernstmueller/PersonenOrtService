@@ -48,7 +48,7 @@ namespace PersonenOrt.Repository.Service.Controllers
 
 
         [HttpPost(Name = "PostPerson")]
-        public HttpResponseMessage PostPerson(Person person)
+        public IActionResult PostPerson(Person person)
         {
             var retval = new HttpResponseMessage();
             using (var context = new PersonenOrtContext())
@@ -62,10 +62,9 @@ namespace PersonenOrt.Repository.Service.Controllers
                 person.Ort = ort;
                 context.Person.Add(person);
                 context.SaveChanges();
-                retval.StatusCode = System.Net.HttpStatusCode.OK;
-                retval.Content = new StringContent("Add Person with Name " + person.Name + " succeeded.");
-                return retval;
-
+                return this.StatusCode(
+                    StatusCodes.Status200OK, 
+                    "Add Person with Name " + person.Name + " succeeded.");
             }
         }
     }

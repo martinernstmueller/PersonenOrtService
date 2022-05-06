@@ -9,7 +9,6 @@ namespace PersonenOrt.Repository.Service.Controllers
     public class OrtController : ControllerBase
     {
         private readonly ILogger<OrtController> _logger;
-
         public OrtController(ILogger<OrtController> logger)
         {
             _logger = logger;
@@ -38,7 +37,7 @@ namespace PersonenOrt.Repository.Service.Controllers
 
 
         [HttpPost(Name = "PostOrt")]
-        public HttpResponseMessage PostOrt(Ort ort)
+        public IActionResult PostOrt(Ort ort)
         {
             using (var context = new PersonenOrtContext())
             {
@@ -46,16 +45,15 @@ namespace PersonenOrt.Repository.Service.Controllers
 
                 if (context.Ort.FirstOrDefault(o => o.PLZ == ort.PLZ) != null)
                 {
-                    
-                    retval.StatusCode = System.Net.HttpStatusCode.Conflict;
-                    retval.Content = new StringContent("Add Ort with PLZ " + ort.PLZ + " failed! PLZ already exists.");
-                    return retval;
+                    return this.StatusCode(
+                        StatusCodes.Status409Conflict,
+                        "Add Ort with PLZ " + ort.PLZ + " failed! PLZ already exists.");
                 }
-                    ;
                 context.Ort.Add(ort);
                 context.SaveChanges();
-                retval.Content = new StringContent("Add Ort with PLZ " + ort.PLZ + " to out Database");
-                return retval;
+                return this.StatusCode(
+                    StatusCodes.Status200OK,
+                     "Add Ort with PLZ " + ort.PLZ + " to out Database");
             }
         }
     }
