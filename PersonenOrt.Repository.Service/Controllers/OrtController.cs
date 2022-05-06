@@ -32,12 +32,23 @@ namespace PersonenOrt.Repository.Service.Controllers
         }
 
         [HttpDelete("{id:int}")]
-        public IActionResult DeleteOrt(int id)
+        public IActionResult DeleteOrt(String plz)
         {
+            using (var context = new PersonenOrtContext())
+            {
+                var OrtToBeDeleted = context.Ort.FirstOrDefault(p => p.PLZ == plz);
+                if (OrtToBeDeleted == null)
+                    return this.StatusCode(
+                        StatusCodes.Status404NotFound,
+                        "Ort with id " + plz + " not found");
+
+                context.Ort.Remove(OrtToBeDeleted);
+                context.SaveChanges();
+            }
+
             return this.StatusCode(
                 StatusCodes.Status501NotImplemented,
-                "Delete of Ort needs to be implemented.");
-
+                "Ort with plz " + plz + "deleted");
         }
 
         [HttpPost(Name = "PostOrt")]
