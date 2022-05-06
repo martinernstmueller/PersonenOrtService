@@ -47,14 +47,29 @@ namespace PersonenOrt.Repository.Service.Controllers
 
 
         [HttpPost(Name = "PostPerson")]
-        public Person PostPerson(Person person)
+        public HttpResponseMessage PostPerson(Person person)
         {
             using (var context = new PersonenOrtContext())
             {
+                var retval = new HttpResponseMessage();
+
+                Ort? ort = context.Ort.FirstOrDefault(o => o.PLZ == person.Ort.PLZ);
+                if (ort != null)
+                {
+                    person.Ort = ort;
+                }
+                else
+                {
+                    ort = new Ort(person.Ort.Name, person.Ort.PLZ);
+                    context.Ort.Add(ort);
+                }
+                person.Ort = ort;
                 context.Person.Add(person);
                 context.SaveChanges();
+                retval.StatusCode = System.Net.HttpStatusCode.OK;
+                retval.Content = new StringContent("Add Person with Name " + person.Name + " succeded");
+                return retval;
             }
-            return person;
         }
     }
 }
