@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using PersonenOrt.Framework;
 using PersonenOrt.Repository.Service.Context;
 
@@ -21,7 +22,7 @@ namespace PersonenOrt.Repository.Service.Controllers
         {
             using (var context = new PersonenOrtContext())
             {
-                return context.Person.ToList();
+                return context.Person.Include(p => p.Ort).ToList();
             }
         }
         [HttpPut]
@@ -36,22 +37,22 @@ namespace PersonenOrt.Repository.Service.Controllers
                 context.Person.Update(person);
                 context.SaveChanges();
             }
-            return "person with id" + id + "changed";
+            return "person with id " + id + " changed";
         }
 
-        [HttpDelete("{id:int}")]
+        [HttpDelete]
         public string DeletePerson(int id)
         {
             using (var context = new PersonenOrtContext())
             {
                 var PersonToBeDeleted = context.Person.FirstOrDefault(p => p.Id == id);
                 if (PersonToBeDeleted == null)
-                    return "Person with id " + id + "not found";
+                    return "Person with id " + id + " not found";
 
                 context.Person.Remove(PersonToBeDeleted);
                 context.SaveChanges();
             }
-            return "Person with id " + id + "deleted";
+            return "Person with id " + id + " deleted";
         }
 
 
@@ -60,6 +61,13 @@ namespace PersonenOrt.Repository.Service.Controllers
         {
             using (var context = new PersonenOrtContext())
             {
+                Ort? ort = context.Ort.FirstOrDefault(o => o.PLZ == person.Ort.PLZ);
+                if (ort == null)
+                {
+                    ort = new Ort(person.Ort.Name, person.Ort.PLZ);
+                    context.Ort.Add(ort);
+                }
+                person.Ort = ort;  
                 context.Person.Add(person);
                 context.SaveChanges();
             }

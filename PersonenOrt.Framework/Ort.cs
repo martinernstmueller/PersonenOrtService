@@ -12,5 +12,15 @@ namespace PersonenOrt.Framework
         [Key]
         public string PLZ { get; set; }
         public string Name { get; set; }
+
+        public Ort(string Name, string PLZ)
+        {
+            this.Name = Name;   
+            this.PLZ = PLZ; 
+        }
+        public Ort()
+        {
+        }
     }
+    
 }

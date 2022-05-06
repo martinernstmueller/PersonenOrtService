@@ -38,25 +38,35 @@ namespace PersonenOrt.Repository.Service.Controllers
             {
                 var OrtToBeDeleted = context.Ort.FirstOrDefault(o => o.PLZ == plz);
                 if (OrtToBeDeleted == null)
-                    return "Ort with id " + plz + "not found";
+                    return "Ort with id " + plz + " not found";
 
                 context.Ort.Remove(OrtToBeDeleted);
                 context.SaveChanges();
             }
-            return "Ort with id " + plz + "deleted";
+            return "Ort with id " + plz + " deleted";
         }
-        
+
 
         [HttpPost(Name = "PostOrt")]
-        public Ort PostOrt(Ort ort)
+        public HttpResponseMessage PostOrt(Ort ort)
         {
             using (var context = new PersonenOrtContext())
             {
+                var retval = new HttpResponseMessage();
+
+                if (context.Ort.FirstOrDefault(o => o.PLZ == ort.PLZ) != null)
+                {
+                    retval.StatusCode = System.Net.HttpStatusCode.Conflict;
+                    retval.Content = new StringContent("Add Ort with PLZ " + ort.PLZ + " failed! PLZ already exists.");
+                    return retval;
+                }
+                    
                 context.Ort.Add(ort);
                 context.SaveChanges();
+                retval.Content = new StringContent("Add Ort with PLZ " + ort.PLZ + " to out Database");
+                return retval;
             }
-            return ort;
         }
-        
+
     }
 }
