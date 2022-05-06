@@ -12,7 +12,7 @@ namespace PersonenOrt.Framework
     {
         [Key]
         [AllowNull]
-        public string PLZ { get; set; }
+        public string? PLZ { get; set; }
         public string Name { get; set; }
         public Ort(string name, string plz)
         {
