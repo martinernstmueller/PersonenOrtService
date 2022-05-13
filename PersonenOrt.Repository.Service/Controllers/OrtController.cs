@@ -24,9 +24,20 @@ namespace PersonenOrt.Repository.Service.Controllers
         }
 
         [HttpPut("{id:int}")]
-        public IActionResult PutOrt(int id, Ort ort)
+        public IActionResult PutOrt(string plz, Ort ort)
         {
-            return Ok("update");
+            if(plz != ort.PLZ && ort.PLZ != null)
+                return Conflict("Plz in querry differs from Plz in path ");
+
+            using (var context = new PersonenOrtContext())
+            {
+                Ort? ortDB = context.Ort.FirstOrDefault(o => o.PLZ == plz);
+                if (ortDB == null)
+                    return Conflict("Plz" + plz + "not found in Databse");
+                ortDB.Name = ort.Name;
+                context.SaveChanges();
+                return Ok(ortDB);
+            }
         }
 
         [HttpDelete("{id:int}")]
