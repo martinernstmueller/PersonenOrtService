@@ -35,13 +35,12 @@ namespace PersonenOrt.Repository.Service.Controllers
             using (var context = new PersonenOrtContext())
             {
                 
-                Person? personDB = context.Person.FirstOrDefault(p => p.Id == id);
+                Person personDB = context.Person.FirstOrDefault(p => p.Id == id);
                 if (personDB == null)
                 { 
                     return Conflict("Id " + id + " not found in Database"); 
                 }
 
-                personDB.Id = person.Id;
                 personDB.Name = person.Name;
                 personDB.Vorname = person.Vorname;
                 personDB.Ort = person.Ort;
