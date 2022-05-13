@@ -28,7 +28,7 @@ namespace PersonenOrt.Repository.Service.Controllers
         {
             if (plz != ort.PLZ && ort.PLZ != null)
             {
-                return Conflict("PLZ in query differs from PLZ in path");
+                return Conflict("PLZ in query differs from ID in path");
             }
             using (var context = new PersonenOrtContext())
             {
