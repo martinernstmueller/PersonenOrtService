@@ -37,7 +37,7 @@ namespace PersonenOrt.Repository.Service.Controllers
                 Person? personDB = context.Person.FirstOrDefault(o => o.Id == id);
                 if (personDB == null)
                 {
-                    return Conflict("Id " + id + " not found in Database");
+                    return NotFound("Id " + id + " not found in Database");
                 }
 
                 Ort? ort = context.Ort.FirstOrDefault(o => o.PLZ == person.Ort.PLZ);
