@@ -41,7 +41,7 @@ namespace PersonenOrt.Repository.Service.Controllers
                 }
                 personDB.Name = person.Name;
                 context.SaveChanges();
-                return Ok(personDB);
+                return Ok("Person with " + id + " changed");
             }
         }
 
@@ -82,7 +82,7 @@ namespace PersonenOrt.Repository.Service.Controllers
                 context.SaveChanges();
                 retval.StatusCode = System.Net.HttpStatusCode.OK;
                 retval.Content = new StringContent("Add Person with Name " + person.Name + " succeeded.");
-                return Ok(person);
+                return Ok("Add Person with Id " + person.Id + " to our Database");
             }
         }
     }
