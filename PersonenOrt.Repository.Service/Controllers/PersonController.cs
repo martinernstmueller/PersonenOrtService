@@ -28,6 +28,36 @@ namespace PersonenOrt.Repository.Service.Controllers
         [HttpPut("{id:int}")]
         public IActionResult PutPerson(int id, Person person)
         {
+            if (id != person.Id && person.Id != 0)
+            {
+                return BadRequest("id in path and person don't match");
+            }
+
+            using (var context = new PersonenOrtContext())
+            {
+                if (!context.Person.Any(person1 => person1.Id == id))
+                {
+                    return BadRequest("Person can't be found");
+                }
+
+                var personToBeUpdated = context.Person.FirstOrDefault(p => p.Id == id);
+                if (personToBeUpdated == null)
+                    return StatusCode(500, "Person can't be found");
+                Ort? ort = context.Ort.FirstOrDefault(o => o.PLZ == person.Ort.PLZ);
+                if (ort == null)
+                {
+                    ort = new Ort(person.Ort.Name, person.Ort.PLZ);
+                    context.Ort.Add(ort);
+                }
+                person.Ort = ort;
+                personToBeUpdated.Name = person.Name;
+                personToBeUpdated.Vorname = person.Vorname;
+                personToBeUpdated.Geburtsdatum = person.Geburtsdatum;
+                personToBeUpdated.Id = person.Id;
+                personToBeUpdated.Ort = person.Ort;
+                context.Person.Update(personToBeUpdated);
+                context.SaveChanges();
+            }
             return Ok("update");
         }
 
