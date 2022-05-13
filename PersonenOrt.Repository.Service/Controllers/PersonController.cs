@@ -28,7 +28,7 @@ namespace PersonenOrt.Repository.Service.Controllers
         [HttpPut("{id:int}")]
         public IActionResult PutPerson(int id, Person person)
         {
-            if (id != person.Id && person.Id != null)
+            if (id != person.Id && person.Id != 0)
             {
                 return Conflict("PersonID in query differs from PersonID in path");
             }
