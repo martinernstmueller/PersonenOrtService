@@ -23,10 +23,24 @@ namespace PersonenOrt.Repository.Service.Controllers
             }
         }
 
-        [HttpPut("{id:int}")]
-        public IActionResult PutOrt(int id, Ort ort)
+        [HttpPut("{plz}")]
+        public IActionResult PutOrt(String plz, Ort ort)
         {
-            return Ok("update");
+            if (plz != ort.PLZ && ort.PLZ != null)
+            {
+                return Conflict("Plz in query differs from PLZ in path");
+            }
+            using (var context = new PersonenOrtContext())
+            {
+                Ort? ortDB = context.Ort.FirstOrDefault(o => o.PLZ == plz);
+                if (ortDB == null)
+                {
+                    return Conflict("Plz " + plz + " not found in Database");
+                }
+                ortDB.Name = ort.Name;
+                context.SaveChanges();
+                return Ok(ortDB);
+            }
         }
 
         [HttpDelete("{id:int}")]
@@ -34,7 +48,6 @@ namespace PersonenOrt.Repository.Service.Controllers
         {
             return Ok("deleted");
         }
-
 
         [HttpPost(Name = "PostOrt")]
         public IActionResult PostOrt(Ort ort)

@@ -25,10 +25,32 @@ namespace PersonenOrt.Repository.Service.Controllers
             }
         }
 
-        [HttpPut("{id:int}")]
-        public IActionResult PutPerson(int id, Person person)
+        [HttpPut("{id}")]
+        public IActionResult Put(int id, Person person)
         {
-            return Ok("update");
+            if (id != person.Id && person.Id != null)
+            {
+                return Conflict("ID in query differs from ID in path");
+            }
+            using (var context = new PersonenOrtContext())
+            {
+                Person? personDB = context.Person.FirstOrDefault(p => p.Id == id);
+                if (personDB == null)
+                {
+                    return Conflict("ID " + id + " not found in Database");
+                }
+                personDB.Name = person.Name;
+                personDB.Vorname = person.Vorname;
+                //alles funktioniert, auﬂer das Updaten des Ortes von der Person
+                //wenn der Ort nicht exestiert wird er erstellt
+                //wenn er exestiert kommt eine Exception
+                //personDB.Ort = person.Ort;
+                //personDB.Ort.Name = person.Ort.Name;
+                //personDB.Ort.PLZ = person.Ort.PLZ;
+                personDB.Geburtsdatum = person.Geburtsdatum;
+                context.SaveChanges();
+                return Ok(personDB);
+            }
         }
 
         [HttpDelete("{id:int}")]

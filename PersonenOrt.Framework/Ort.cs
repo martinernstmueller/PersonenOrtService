@@ -10,8 +10,8 @@ namespace PersonenOrt.Framework
     public class Ort
     {
         [Key]
-        public string PLZ { get; set; }
-        public string Name { get; set; }
+        public string? PLZ { get; set; }
+        public string? Name { get; set; }
         public Ort(string name, string plz)
         {
             Name = name;
