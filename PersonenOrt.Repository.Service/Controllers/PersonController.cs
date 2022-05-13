@@ -39,17 +39,35 @@ namespace PersonenOrt.Repository.Service.Controllers
                 {
                     return Conflict("Person with id " + id + " not found in Database");
                 }
-
-                Ort? ort = context.Ort.FirstOrDefault(o => o.PLZ == person.Ort.PLZ);
-                if (ort == null)
+                Ort ort = null;
+                if (person.Ort.Name != "string" && person.Ort.PLZ != "string")
                 {
-                    ort = new Ort(person.Ort.Name, person.Ort.PLZ);
-                    context.Ort.Add(ort);
+                    ort = context.Ort.FirstOrDefault(o => o.PLZ == person.Ort.PLZ);
+                    if (ort == null)
+                    {
+                        ort = new Ort(person.Ort.Name, person.Ort.PLZ);
+                        context.Ort.Add(ort);
+                    }
+                }
+                else
+                {
+                    ort = PersonDB.Ort;
                 }
 
-                PersonDB.Name = person.Name ?? PersonDB.Name;
-                PersonDB.Vorname = person.Vorname ?? PersonDB.Vorname;
-                PersonDB.Geburtsdatum = person.Geburtsdatum;
+                if (person.Name != "string")
+                {
+                    PersonDB.Name = person.Name;
+                }
+
+                if (person.Vorname != "string")
+                {
+                    PersonDB.Vorname = person.Vorname;
+                }
+                if(person.Geburtsdatum != null)
+                {
+                    PersonDB.Geburtsdatum = person.Geburtsdatum;
+                }
+                
                 PersonDB.Ort = ort;
                 context.SaveChanges();
                 return Ok(PersonDB);
