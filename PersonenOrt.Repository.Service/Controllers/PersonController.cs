@@ -40,8 +40,10 @@ namespace PersonenOrt.Repository.Service.Controllers
                     return Conflict("Person " + id + " not found in Database");
                 }
                 personDB.Name = person.Name;
+                personDB.Vorname = person.Vorname;
+                personDB.Geburtsdatum = person.Geburtsdatum; 
                 context.SaveChanges();
-                return Ok("Person with " + id + " changed");
+                return Ok("Person with id " + id + " changed");
             }
         }
 
@@ -82,7 +84,7 @@ namespace PersonenOrt.Repository.Service.Controllers
                 context.SaveChanges();
                 retval.StatusCode = System.Net.HttpStatusCode.OK;
                 retval.Content = new StringContent("Add Person with Name " + person.Name + " succeeded.");
-                return Ok("Add Person with Id " + person.Id + " to our Database");
+                return Ok("Added Person with Id " + person.Id + " to our Database");
             }
         }
     }

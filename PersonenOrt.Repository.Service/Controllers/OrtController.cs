@@ -39,7 +39,7 @@ namespace PersonenOrt.Repository.Service.Controllers
                 }
                 ortDB.Name = ort.Name;
                 context.SaveChanges();
-                return Ok("Ort with " + plz + " changed");
+                return Ok("Ort with plz " + plz + " changed");
             }
         }
 
@@ -71,7 +71,7 @@ namespace PersonenOrt.Repository.Service.Controllers
 
                 context.Ort.Add(ort);
                 context.SaveChanges();
-                return Ok("Add Ort with PLZ " + ort.PLZ + " to our Database");
+                return Ok("Added Ort with PLZ " + ort.PLZ + " to our Database");
             }
         }
     }
