@@ -43,10 +43,19 @@ namespace PersonenOrt.Repository.Service.Controllers
             }
         }
 
-        [HttpDelete("{id:int}")]
-        public IActionResult DeleteOrt(int id)
+        [HttpDelete("{plz}")]
+        public IActionResult DeleteOrt(string plz)
         {
-            return Ok("deleted");
+            using (var context = new PersonenOrtContext())
+            {
+                var OrtToBeDeleted = context.Ort.FirstOrDefault(p => p.PLZ == plz);
+                if (OrtToBeDeleted == null)
+                    return Problem(detail: "this Ort doesn't exist");
+                context.Ort.Remove(OrtToBeDeleted);
+                context.SaveChanges();
+            }
+
+            return Ok("Ort with plz " + plz + " deleted");
         }
 
 
@@ -62,7 +71,7 @@ namespace PersonenOrt.Repository.Service.Controllers
 
                 context.Ort.Add(ort);
                 context.SaveChanges();
-                return Ok("Add Ort with PLZ " + ort.PLZ + " to out Database");
+                return Ok("Add Ort with PLZ " + ort.PLZ + " to our Database");
             }
         }
     }

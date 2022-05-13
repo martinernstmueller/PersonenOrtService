@@ -28,7 +28,21 @@ namespace PersonenOrt.Repository.Service.Controllers
         [HttpPut("{id:int}")]
         public IActionResult PutPerson(int id, Person person)
         {
-            return Ok("update");
+            if (id != person.Id && person.Id != null)
+            {
+                return Conflict("Id in query differs from Id in path");
+            }
+            using (var context = new PersonenOrtContext())
+            {
+                Person? personDB = context.Person.FirstOrDefault(o => o.Id == id);
+                if (personDB == null)
+                {
+                    return Conflict("Person " + id + " not found in Database");
+                }
+                personDB.Name = personDB.Name;
+                context.SaveChanges();
+                return Ok(personDB);
+            }
         }
 
         [HttpDelete("{id:int}")]
@@ -43,7 +57,7 @@ namespace PersonenOrt.Repository.Service.Controllers
                 context.SaveChanges();
             }
 
-            return Ok("Person with id " + id + "deleted");
+            return Ok("Person with id " + id + " deleted");
         }
 
         [HttpPost(Name = "PostPerson")]
@@ -57,6 +71,10 @@ namespace PersonenOrt.Repository.Service.Controllers
                 {
                     ort = new Ort(person.Ort.Name, person.Ort.PLZ);
                     context.Ort.Add(ort);
+                }
+                else if (context.Person.FirstOrDefault(p => p.Id == person.Id) != null)
+                {
+                    return Problem(detail: ("Add Person with Id " + person.Id + " failed! Id already exists."));
                 }
 
                 person.Ort = ort;
