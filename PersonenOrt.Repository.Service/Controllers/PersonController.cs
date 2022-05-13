@@ -28,7 +28,29 @@ namespace PersonenOrt.Repository.Service.Controllers
         [HttpPut("{id:int}")]
         public IActionResult PutPerson(int id, Person person)
         {
-            return Ok("update");
+            if (id != person.Id && person.Id != 0)
+            {
+                return Conflict("Id in query differs from Id in path");
+            }
+            using (var context = new PersonenOrtContext())
+            {
+                Person? personDB = context.Person.FirstOrDefault(p => p.Id == id);
+                if (personDB == null)
+                {
+                    return Conflict("Person with id " + id + " not found in Database");
+                }
+                personDB.Name = person.Name;
+                personDB.Vorname = person.Vorname;
+                personDB.Geburtsdatum = person.Geburtsdatum;
+                Ort? ortDB = context.Ort.FirstOrDefault(o => o.PLZ == person.Ort.PLZ);
+                if (ortDB == null)
+                    return Conflict("Ort with PLZ " + person.Ort.PLZ + " not found in Database");
+
+                personDB.Ort = ortDB;
+
+                context.SaveChanges();
+                return Ok(personDB);
+            }
         }
 
         [HttpDelete("{id:int}")]
