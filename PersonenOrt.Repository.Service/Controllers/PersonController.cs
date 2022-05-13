@@ -28,7 +28,23 @@ namespace PersonenOrt.Repository.Service.Controllers
         [HttpPut("{id:int}")]
         public IActionResult PutPerson(int id, Person person)
         {
-            return Ok("update");
+            if (id != person.Id && person.Id != null)
+            {
+                return Conflict("Id in query differs from Id in path");
+            }
+            using (var context = new PersonenOrtContext())
+            {
+                Person? personDB = context.Person.FirstOrDefault(o => o.Id == id);
+                if (personDB == null)
+                {
+                    return Conflict("Person " + id + " not found in Database");
+                }
+                personDB.Name = person.Name;
+                personDB.Vorname = person.Vorname;
+                personDB.Geburtsdatum = person.Geburtsdatum; 
+                context.SaveChanges();
+                return Ok("Person with id " + id + " changed");
+            }
         }
 
         [HttpDelete("{id:int}")]
@@ -43,7 +59,7 @@ namespace PersonenOrt.Repository.Service.Controllers
                 context.SaveChanges();
             }
 
-            return Ok("Person with id " + id + "deleted");
+            return Ok("Person with id " + id + " deleted");
         }
 
         [HttpPost(Name = "PostPerson")]
@@ -58,13 +74,17 @@ namespace PersonenOrt.Repository.Service.Controllers
                     ort = new Ort(person.Ort.Name, person.Ort.PLZ);
                     context.Ort.Add(ort);
                 }
+                else if (context.Person.FirstOrDefault(p => p.Id == person.Id) != null)
+                {
+                    return Problem(detail: ("Add Person with Id " + person.Id + " failed! Id already exists."));
+                }
 
                 person.Ort = ort;
                 context.Person.Add(person);
                 context.SaveChanges();
                 retval.StatusCode = System.Net.HttpStatusCode.OK;
                 retval.Content = new StringContent("Add Person with Name " + person.Name + " succeeded.");
-                return Ok(person);
+                return Ok("Added Person with Id " + person.Id + " to our Database");
             }
         }
     }
