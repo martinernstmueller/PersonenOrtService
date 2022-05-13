@@ -39,7 +39,7 @@ namespace PersonenOrt.Repository.Service.Controllers
                 {
                     return Conflict("Person " + id + " not found in Database");
                 }
-                personDB.Name = personDB.Name;
+                personDB.Name = person.Name;
                 context.SaveChanges();
                 return Ok(personDB);
             }
